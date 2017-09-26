@@ -1,3 +1,5 @@
+import sys
+
 def create_table():
     a = []
     for i in range(256):
@@ -14,6 +16,10 @@ def crc_update(buf, crc):
     for k in buf:
         crc = (crc >> 8) ^ crc_table[(crc & 0xff) ^ k]
     return crc ^ 0xffffffff
- 
-crc_table = create_table()
-print(hex(crc_update(b"The quick brown fox jumps over the lazy dog", 0)))
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        print('Empty input!\n\tUsage: {} [STRING]'.format(sys.argv[0]))
+        exit(1)
+    crc_table = create_table()
+    print(hex(crc_update(sys.argv[1].encode(), 0))[2:])

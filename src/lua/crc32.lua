@@ -1,10 +1,9 @@
 local uint8 = 0xff
 local uint32 = 0xffffffff
 local crc_table = {}
-local fmt = "%x"
 
 function hex(str)
-  return fmt:format(str)
+  return ("%x"):format(str)
 end
 
 function xor(x, y) 
@@ -34,4 +33,8 @@ function crc32(s)
   return xor(crc, uint32)
 end
 
-print(hex(crc32("The quick brown fox jumps over the lazy dog")))
+if #arg == 0 then
+  print(string.format("Usage: %s [STRING]", arg[0]))
+  os.exit(1)
+end
+print(hex(crc32(arg[1])))
