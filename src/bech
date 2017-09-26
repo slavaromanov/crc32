@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+import os
+import random
+import string
+from time import time
+
+
+def bench(file, argument):
+    c = time()
+    os.system("{} '{}' > /dev/null".format(file, argument))
+    return time() - c
+
+def test_c(arg):
+    return bench("./c/crc32", arg)
+
+def test_go(arg):
+    return bench("./go/gcrc32", arg)
+
+def test_lua(arg):
+    return bench("lua lua/crc32.lua", arg)
+
+def test_py(arg):
+    return bench("python python/crc32.py", arg)
+
+def rs():
+    return random.choice(string.ascii_letters)
+
+def random_string(l):
+    return ''.join(rs() for _ in range(l))
+
+if __name__ == "__main__":
+    print("""
+{s:6s} | {c:6s} | {go:6s} | {lua:6s} | {py:6s} |
+{o:6d} | {c_1:.4f} | {go_1:.4f} | {lua_1:.4f} | {py_1:.4f} |
+{t:6d} | {c_10:.4f} | {go_10:.4f} | {lua_10:.4f} | {py_10:.4f} |
+{th:6d} | {c_100:.4f} | {go_100:.4f} | {lua_100:.4f} | {py_100:.4f} |
+{f:6d} | {c_1000:.4f} | {go_1000:.4f} | {lua_1000:.4f} | {py_1000:.4f} |
+{fv:6d} | {c_10000:.4f} | {go_10000:.4f} | {lua_10000:.4f} | {py_10000:.4f} |
+        """.format(**{
+            's': "     ",
+            'o': 1,
+            't': 10,
+            'th': 100,
+            'f': 1000,
+            'fv': 10000,
+            'c': 'c',
+            'go': 'go',
+            'lua': 'lua',
+            'py': 'python',
+            'c_1': test_c(random_string(1)),
+            'c_10': test_c(random_string(10)),
+            'c_100': test_c(random_string(100)),
+            'c_1000': test_c(random_string(1000)),
+            'c_10000': test_c(random_string(10000)),
+            'go_1': test_go(random_string(1)),
+            'go_10': test_go(random_string(10)),
+            'go_100': test_go(random_string(100)),
+            'go_1000': test_go(random_string(1000)),
+            'go_10000': test_go(random_string(10000)),
+            'lua_1': test_lua(random_string(1)),
+            'lua_10': test_lua(random_string(10)),
+            'lua_100': test_lua(random_string(100)),
+            'lua_1000': test_lua(random_string(1000)),
+            'lua_10000': test_lua(random_string(10000)),
+            'py_1': test_py(random_string(1)),
+            'py_10': test_py(random_string(10)),
+            'py_100': test_py(random_string(100)),
+            'py_1000': test_py(random_string(1000)),
+            'py_10000': test_py(random_string(10000))
+            }
+        )
+    )
